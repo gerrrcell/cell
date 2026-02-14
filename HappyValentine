@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surat Spesial Untukmu 💌</title>
+
+<style>
+:root {
+    --pink-dark: #d81b60;
+    --pink-main: #ec407a;
+    --pink-light: #f06292;
+    --bg-color: #ffe4ec;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: radial-gradient(circle at center, #fff, var(--bg-color));
+}
+
+.container {
+    position: relative;
+    perspective: 1000px; 
+}
+
+.envelope {
+    width: 300px;
+    height: 200px;
+    background: var(--pink-light);
+    position: relative;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    cursor: pointer;
+    z-index: 3;
+    transition: transform 0.3s;
+}
+
+.envelope:hover {
+    transform: translateY(-5px);
+}
+
+.envelope::before {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    width: 0; height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 100px solid #f48fb1;
+    bottom: 0;
+    border-radius: 0 0 10px 10px;
+}
+
+.envelope::after {
+    content: "";
+    position: absolute;
+    z-index: 4;
+    width: 0; height: 0;
+    border-left: 150px solid #f8bbd0;
+    border-right: 150px solid #f8bbd0;
+    border-top: 100px solid transparent;
+    bottom: 0;
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    width: 0; height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 110px solid var(--pink-main);
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 6;
+}
+
+.envelope.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 50px;
+    color: white;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    pointer-events: none;
+}
+
+.letter {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 280px;
+    height: 180px;
+    background: white;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.letter.show {
+    opacity: 1;
+    transform: translateY(-220px) scale(1.1);
+    z-index: 10;
+    height: auto;
+    min-height: 200px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    animation: floating 3s ease-in-out infinite 0.8s;
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(-220px) scale(1.1); }
+    50% { transform: translateY(-230px) scale(1.1); }
+}
+
+h2 { color: var(--pink-dark); margin: 0 0 10px 0; font-size: 1.4rem; }
+#text { color: #555; font-size: 1rem; line-height: 1.6; min-height: 60px; }
+
+button {
+    margin-top: 15px;
+    padding: 10px 25px;
+    border: none;
+    background: var(--pink-main);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236, 64, 122, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(236, 64, 122, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236, 64, 122, 0); }
+}
+
+.flower {
+    position: absolute;
+    pointer-events: none;
+    z-index: 100;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-4deg); }
+    80% { transform: rotate(4deg); }
+}
+.envelope.shake { animation: shake 0.5s ease; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="letter" id="letter">
+        <h2>Happy Valentine 🌸</h2>
+        <div id="text">Ada pesan kecil di dalam sini...</div>
+        <button onclick="nextMessage()">Lanjut Pesan</button>
+    </div>
+
+    <div class="envelope" id="envelope" onclick="openLetter()">
+        <div class="flap"></div>
+        <div class="label">Klik di sini 💌</div>
+    </div>
+</div>
+
+<script>
+let index = 0;
+const messages = [
+    "Hai celmaa ✨",
+    "Cuma mau bilang, kamu cantikk bangettt",
+    "Makasii yaa udah ngebuat aku senyum mulu akhir akhir ini😁",
+    "Semoga harimu penuh dengan senyumann",
+    "Happy Valentine's Day!! 🌸🌷"
+];
+
+function openLetter() {
+    const env = document.getElementById("envelope");
+    const letter = document.getElementById("letter");
+
+    if(env.classList.contains("open")) return;
+
+    env.classList.add("shake");
+
+    setTimeout(() => {
+        env.classList.remove("shake");
+        env.classList.add("open");
+        
+        document.querySelector('.label').style.opacity = '0';
+
+        setTimeout(() => {
+            letter.classList.add("show");
+            startFlowerRain();
+            nextMessage();
+        }, 600);
+    }, 500);
+}
+
+function nextMessage() {
+    if(index < messages.length) {
+        typeText(messages[index]);
+        index++;
+    } else {
+        index = 0;
+        typeText(messages[index]);
+        index++;
+    }
+}
+
+function typeText(text) {
+    const element = document.getElementById("text");
+    let i = 0;
+    element.innerHTML = "";
+    
+    const typing = setInterval(() => {
+        if(i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+        } else {
+            clearInterval(typing);
+        }
+    }, 50);
+}
+
+function createFlower() {
+    const flower = document.createElement("div");
+    const icons = ["🌸", "🌹", "✨", "💖", "🌷"];
+    flower.className = "flower";
+    flower.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+    flower.style.left = Math.random() * 100 + "vw";
+    flower.style.fontSize = (Math.random() * 20 + 10) + "px";
+    flower.style.animationDuration = (Math.random() * 3 + 2) + "s";
+    document.body.appendChild(flower);
+    
+    setTimeout(() => flower.remove(), 5000);
+}
+
+function startFlowerRain() {
+    setInterval(createFlower, 300);
+}
+</script>
+
+</body>
+</html>
